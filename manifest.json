@@ -1,0 +1,12 @@
+{
+  "name": "Age Calculator",
+  "short_name": "Age Calculator",
+  "description": "Calculate your age in years, months and days.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6a5cff",
+  "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr"
+}

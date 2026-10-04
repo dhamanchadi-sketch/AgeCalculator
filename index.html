@@ -1,0 +1,729 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Age Calculator</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, "Noto Sans Kannada", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #6a5cff, #00c6ff, #ff4f9a);
+}
+
+.app {
+  width: 100%;
+  max-width: 430px;
+  padding: 25px;
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+}
+
+.language {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.language button {
+  border: none;
+  padding: 9px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #eeeeee;
+}
+
+.language button.active {
+  background: #6a5cff;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  color: #30275e;
+  margin: 5px 0 22px;
+}
+
+label {
+  display: block;
+  margin: 15px 0 7px;
+  font-weight: bold;
+  color: #403b70;
+}
+
+input {
+  width: 100%;
+  height: 52px;
+  padding: 12px;
+  border: 2px solid #dddddd;
+  border-radius: 13px;
+  font-size: 19px;
+  outline: none;
+  background: #fafaff;
+  text-align: center;
+}
+
+input:focus {
+  border-color: #6a5cff;
+  box-shadow: 0 0 0 3px rgba(106,92,255,0.15);
+}
+
+input[readonly] {
+  background: #eeeeee;
+}
+
+#reset {
+  width: 100%;
+  height: 52px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 13px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff4f6d, #ff7b54);
+}
+
+#reset:focus {
+  outline: 4px solid rgba(255,79,109,0.3);
+}
+
+.error {
+  color: #e53935;
+  text-align: center;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.result {
+  display: none;
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f4f1ff, #eafaff);
+}
+
+.result h2 {
+  text-align: center;
+  color: #403b70;
+  margin-top: 0;
+}
+
+.age-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.age-item {
+  flex: 1;
+  text-align: center;
+  padding: 14px 4px;
+  border-radius: 15px;
+  color: white;
+}
+
+.age-item:nth-child(1) {
+  background: linear-gradient(135deg, #ff5f6d, #ff9966);
+}
+
+.age-item:nth-child(2) {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+}
+
+.age-item:nth-child(3) {
+  background: linear-gradient(135deg, #4776e6, #8e54e9);
+}
+
+.age-number {
+  display: block;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.age-label {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.next-birthday {
+  margin-top: 18px;
+  padding: 17px;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(135deg, #ff9966, #ff5e62);
+}
+
+.next-title {
+  font-weight: bold;
+}
+
+.next-number {
+  font-size: 32px;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="language">
+    <button id="englishBtn" class="active">English</button>
+    <button id="kannadaBtn">ಕನ್ನಡ</button>
+  </div>
+
+  <h1 id="title">Age Calculator</h1>
+
+  <label id="dobLabel">DOB / Date of Birth</label>
+
+  <input
+    id="dob"
+    type="text"
+    placeholder="DD-MM-YYYY"
+    maxlength="10"
+    inputmode="numeric"
+    autocomplete="bday"
+    enterkeyhint="next"
+    autofocus
+  >
+
+  <label id="todayLabel">Today</label>
+
+  <input id="today" type="text" readonly>
+
+  <button id="reset" type="button">
+    Reset
+  </button>
+
+  <div id="error" class="error"></div>
+
+  <div id="result" class="result">
+
+    <h2 id="resultTitle">Result</h2>
+
+    <div class="age-box">
+
+      <div class="age-item">
+        <span id="years" class="age-number">00</span>
+        <span id="yearsLabel" class="age-label">Years</span>
+      </div>
+
+      <div class="age-item">
+        <span id="months" class="age-number">00</span>
+        <span id="monthsLabel" class="age-label">Months</span>
+      </div>
+
+      <div class="age-item">
+        <span id="days" class="age-number">00</span>
+        <span id="daysLabel" class="age-label">Days</span>
+      </div>
+
+    </div>
+
+    <div class="next-birthday">
+
+      <div id="birthdayLabel" class="next-title">
+        Next Birthday
+      </div>
+
+      <div>
+        <span id="nextBirthday" class="next-number">0</span>
+        <span id="nextDaysLabel">Days</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+let language = "en";
+
+const text = {
+
+  en: {
+    title: "Age Calculator",
+    dob: "DOB / Date of Birth",
+    today: "Today",
+    reset: "Reset",
+    result: "Result",
+    years: "Years",
+    months: "Months",
+    days: "Days",
+    nextBirthday: "Next Birthday",
+    invalid: "Please enter a valid DOB.",
+    future: "DOB cannot be in the future."
+  },
+
+  kn: {
+    title: "ವಯಸ್ಸು ಲೆಕ್ಕಾಚಾರ",
+    dob: "ಜನ್ಮ ದಿನಾಂಕ",
+    today: "ಇಂದಿನ ದಿನಾಂಕ",
+    reset: "ಮರುಹೊಂದಿಸಿ",
+    result: "ಫಲಿತಾಂಶ",
+    years: "ವರ್ಷ",
+    months: "ತಿಂಗಳು",
+    days: "ದಿನ",
+    nextBirthday: "ಮುಂದಿನ ಹುಟ್ಟುಹಬ್ಬ",
+    invalid: "ದಯವಿಟ್ಟು ಸರಿಯಾದ ಜನ್ಮ ದಿನಾಂಕ ನಮೂದಿಸಿ.",
+    future: "ಜನ್ಮ ದಿನಾಂಕ ಭವಿಷ್ಯದ ದಿನಾಂಕವಾಗಿರಬಾರದು."
+  }
+
+};
+
+
+/* TODAY */
+
+function setToday() {
+
+  const now = new Date();
+
+  const day =
+    String(now.getDate()).padStart(2, "0");
+
+  const month =
+    String(now.getMonth() + 1).padStart(2, "0");
+
+  const year =
+    now.getFullYear();
+
+  document.getElementById("today").value =
+    day + "-" + month + "-" + year;
+}
+
+
+/* AUTO HYPHEN */
+
+document.getElementById("dob")
+.addEventListener("input", function() {
+
+  let value = this.value.replace(/\D/g, "");
+
+  value = value.substring(0, 8);
+
+  if (value.length > 4) {
+
+    value =
+      value.substring(0, 2) +
+      "-" +
+      value.substring(2, 4) +
+      "-" +
+      value.substring(4);
+
+  } else if (value.length > 2) {
+
+    value =
+      value.substring(0, 2) +
+      "-" +
+      value.substring(2);
+
+  }
+
+  this.value = value;
+
+});
+
+
+/* PARSE DATE */
+
+function parseDate(value) {
+
+  const parts = value.split("-");
+
+  if (parts.length !== 3) {
+    return null;
+  }
+
+  const day = Number(parts[0]);
+  const month = Number(parts[1]);
+  const year = Number(parts[2]);
+
+  if (
+    !day ||
+    !month ||
+    !year ||
+    year < 1900 ||
+    year > 2100
+  ) {
+    return null;
+  }
+
+  const date =
+    new Date(year, month - 1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+}
+
+
+/* CALCULATE */
+
+function calculateAge() {
+
+  const t = text[language];
+
+  const birthDate =
+    parseDate(
+      document.getElementById("dob").value
+    );
+
+  const now = new Date();
+
+  now.setHours(0, 0, 0, 0);
+
+  const error =
+    document.getElementById("error");
+
+
+  if (!birthDate) {
+
+    error.textContent = t.invalid;
+
+    document.getElementById("result")
+      .style.display = "none";
+
+    document.getElementById("dob").focus();
+
+    return false;
+  }
+
+
+  if (birthDate > now) {
+
+    error.textContent = t.future;
+
+    document.getElementById("result")
+      .style.display = "none";
+
+    document.getElementById("dob").focus();
+
+    return false;
+  }
+
+
+  let years =
+    now.getFullYear() -
+    birthDate.getFullYear();
+
+  let months =
+    now.getMonth() -
+    birthDate.getMonth();
+
+  let days =
+    now.getDate() -
+    birthDate.getDate();
+
+
+  if (days < 0) {
+
+    months--;
+
+    const previousMonth =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        0
+      );
+
+    days += previousMonth.getDate();
+  }
+
+
+  if (months < 0) {
+
+    years--;
+    months += 12;
+
+  }
+
+
+  document.getElementById("years").textContent =
+    String(years).padStart(2, "0");
+
+  document.getElementById("months").textContent =
+    String(months).padStart(2, "0");
+
+  document.getElementById("days").textContent =
+    String(days).padStart(2, "0");
+
+
+  /* NEXT BIRTHDAY */
+
+  let birthday =
+    new Date(
+      now.getFullYear(),
+      birthDate.getMonth(),
+      birthDate.getDate()
+    );
+
+
+  if (birthday < now) {
+
+    birthday.setFullYear(
+      now.getFullYear() + 1
+    );
+
+  }
+
+
+  const difference =
+    birthday.getTime() -
+    now.getTime();
+
+
+  const daysLeft =
+    Math.ceil(
+      difference /
+      (1000 * 60 * 60 * 24)
+    );
+
+
+  document.getElementById("nextBirthday")
+    .textContent = daysLeft;
+
+
+  error.textContent = "";
+
+  document.getElementById("result")
+    .style.display = "block";
+
+
+  return true;
+}
+
+
+/* ==================================
+   DOB ENTER / NEXT
+   → CALCULATE
+   → RESET FOCUS
+================================== */
+
+document.getElementById("dob")
+.addEventListener("keydown", function(e) {
+
+  if (
+    e.key === "Enter" ||
+    e.key === "NumpadEnter"
+  ) {
+
+    e.preventDefault();
+
+    const success = calculateAge();
+
+    if (success) {
+
+      /*
+        Result ಬಂದ ನಂತರ
+        Reset buttonಗೆ focus
+      */
+
+      setTimeout(function() {
+
+        document.getElementById("reset").focus();
+
+      }, 100);
+
+    }
+
+  }
+
+});
+
+
+/* ==================================
+   RESET ENTER / NEXT
+   → RESET
+   → DOB SELECT
+================================== */
+
+document.getElementById("reset")
+.addEventListener("keydown", function(e) {
+
+  if (
+    e.key === "Enter" ||
+    e.key === "NumpadEnter"
+  ) {
+
+    e.preventDefault();
+
+    resetApp();
+
+  }
+
+});
+
+
+/* ==================================
+   RESET FUNCTION
+================================== */
+
+function resetApp() {
+
+  const dobBox =
+    document.getElementById("dob");
+
+  dobBox.value = "";
+
+  document.getElementById("error")
+    .textContent = "";
+
+  document.getElementById("result")
+    .style.display = "none";
+
+  setToday();
+
+
+  /*
+    Reset ಆದ ತಕ್ಷಣ
+    DOB box focus + select
+  */
+
+  setTimeout(function() {
+
+    dobBox.focus();
+
+    dobBox.select();
+
+  }, 100);
+
+}
+
+
+/* RESET BUTTON CLICK */
+
+document.getElementById("reset")
+.addEventListener("click", function() {
+
+  resetApp();
+
+});
+
+
+/* LANGUAGE */
+
+function setLanguage(lang) {
+
+  language = lang;
+
+  const t = text[lang];
+
+  document.getElementById("title").textContent =
+    t.title;
+
+  document.getElementById("dobLabel").textContent =
+    t.dob;
+
+  document.getElementById("todayLabel").textContent =
+    t.today;
+
+  document.getElementById("reset").textContent =
+    t.reset;
+
+  document.getElementById("resultTitle").textContent =
+    t.result;
+
+  document.getElementById("yearsLabel").textContent =
+    t.years;
+
+  document.getElementById("monthsLabel").textContent =
+    t.months;
+
+  document.getElementById("daysLabel").textContent =
+    t.days;
+
+  document.getElementById("birthdayLabel").textContent =
+    t.nextBirthday;
+
+  document.getElementById("nextDaysLabel").textContent =
+    t.days;
+
+
+  document.getElementById("englishBtn")
+    .classList.toggle(
+      "active",
+      lang === "en"
+    );
+
+  document.getElementById("kannadaBtn")
+    .classList.toggle(
+      "active",
+      lang === "kn"
+    );
+
+}
+
+
+document.getElementById("englishBtn")
+.addEventListener("click", function() {
+
+  setLanguage("en");
+
+});
+
+
+document.getElementById("kannadaBtn")
+.addEventListener("click", function() {
+
+  setLanguage("kn");
+
+});
+
+
+/* APP START */
+
+setToday();
+
+setLanguage("en");
+
+
+/*
+  App ತೆರೆದ ಕ್ಷಣ
+  DOB focus + cursor
+*/
+
+window.addEventListener("load", function() {
+
+  setTimeout(function() {
+
+    document.getElementById("dob").focus();
+
+  }, 300);
+
+});
+
+</script>
+
+</body>
+</html>
+```
